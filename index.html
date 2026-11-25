@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Dupas · Lucro real</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&display=swap">
+<style>
+  :root {
+    --fundo: #14100e; --card: #201a17; --card2: #2a221e; --linha: #3a302a;
+    --texto: #f6ede5; --suave: #b3a59a; --brasa: #f26a1b; --brasa-tinta: #1a0d04;
+    --lucro: #86d98f; --sai: #ff8573; --venda: #f6ede5;
+    --titulo: "Anton", "Arial Narrow", Impact, sans-serif;
+    --corpo: "DM Sans", system-ui, -apple-system, sans-serif;
+  }
+  :root[data-palette="claro"] {
+    --fundo: #f7f1ea; --card: #ffffff; --card2: #f1e8de; --linha: #e0d3c5;
+    --texto: #1f1712; --suave: #6f6157; --brasa: #d9530a; --brasa-tinta: #ffffff;
+    --lucro: #1f8a3b; --sai: #c93a25; --venda: #1f1712;
+  }
+  [hidden] { display: none !important; }
+  * { box-sizing: border-box; margin: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { background: var(--fundo); color: var(--texto); font: 400 16px/1.45 var(--corpo); min-height: 100vh; padding-bottom: 110px; }
+  button, input, select { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  a { color: inherit; }
+  .num { font-variant-numeric: tabular-nums; }
+
+  .topo { position: sticky; top: 0; z-index: 20; background: var(--fundo); border-bottom: 1px solid var(--linha); }
+  .topo-in { max-width: 1040px; margin: 0 auto; padding: 12px 16px 0; }
+  .marca-linha { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .marca { display: flex; align-items: baseline; gap: 8px; text-decoration: none; }
+  .marca b { font: 400 26px/1 var(--titulo); letter-spacing: .04em; color: var(--brasa); text-transform: uppercase; }
+  .marca span { font-size: 12px; color: var(--suave); letter-spacing: .08em; text-transform: uppercase; }
+  .papel { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--suave); }
+  .seg { display: inline-flex; border: 1px solid var(--linha); border-radius: 999px; padding: 3px; background: var(--card); }
+  .seg button { border: 0; background: none; padding: 6px 14px; border-radius: 999px; font-size: 14px; font-weight: 500; color: var(--suave); min-height: 34px; }
+  .seg button[aria-pressed="true"] { background: var(--brasa); color: var(--brasa-tinta); font-weight: 700; }
+  nav { display: flex; gap: 4px; margin-top: 10px; overflow-x: auto; scrollbar-width: none; }
+  nav::-webkit-scrollbar { display: none; }
+  nav a { flex: 0 0 auto; padding: 10px 14px; text-decoration: none; font-weight: 500; color: var(--suave); border-bottom: 3px solid transparent; white-space: nowrap; }
+  nav a[aria-current="page"] { color: var(--texto); border-bottom-color: var(--brasa); font-weight: 700; }
+
+  main { max-width: 1040px; margin: 0 auto; padding: 20px 16px; display: grid; gap: 16px; }
+  h1 { font: 400 30px/1.05 var(--titulo); letter-spacing: .02em; text-transform: uppercase; }
+  h2 { font: 700 15px/1.2 var(--corpo); letter-spacing: .06em; text-transform: uppercase; color: var(--suave); }
+  .sub { color: var(--suave); font-size: 15px; margin-top: 4px; }
+  .cab { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .card { background: var(--card); border: 1px solid var(--linha); border-radius: 16px; padding: 18px; display: grid; gap: 14px; }
+  .grade { display: grid; gap: 16px; }
+  @media (min-width: 860px) { .grade { grid-template-columns: 1.1fr 1fr; align-items: start; } }
+
+  .heroi { background: var(--brasa); color: var(--brasa-tinta); border: 0; }
+  .heroi .rot { font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .85; }
+  .heroi .valor { font: 400 clamp(44px, 13vw, 68px)/1 var(--titulo); letter-spacing: .01em; }
+  .heroi .de100 { font-size: 16px; font-weight: 500; }
+  .heroi.neg { background: var(--sai); }
+
+  .conta { display: grid; gap: 12px; }
+  .lin { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: baseline; }
+  .lin .nome { font-weight: 500; }
+  .lin .v { font-weight: 700; }
+  .lin .pct { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--suave); }
+  .barra { flex: 1; height: 8px; background: var(--card2); border-radius: 999px; overflow: hidden; }
+  .barra i { display: block; height: 100%; border-radius: 999px; background: var(--sai); }
+  .lin.venda .barra i { background: var(--venda); }
+  .lin.total { border-top: 1px dashed var(--linha); padding-top: 12px; }
+  .lin.total .nome, .lin.total .v { font-size: 18px; }
+  .lin.total .barra i { background: var(--lucro); }
+  .pos { color: var(--lucro); } .negv { color: var(--sai); }
+
+  .dias { display: flex; align-items: flex-end; gap: 4px; height: 120px; }
+  .dias .d { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; gap: 4px; min-width: 0; }
+  .dias .d i { width: 100%; border-radius: 4px 4px 0 0; background: var(--lucro); min-height: 2px; }
+  .dias .d.n i { background: var(--sai); }
+  .dias .d.f i { background: var(--linha); }
+  .dias .d span { font-size: 10px; color: var(--suave); }
+  .leg { display: flex; gap: 14px; font-size: 13px; color: var(--suave); flex-wrap: wrap; }
+  .leg b { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; }
+  .dica { background: var(--card2); border-radius: 12px; padding: 12px 14px; font-size: 15px; }
+  .dica b { color: var(--brasa); }
+
+  .tab { display: grid; gap: 0; }
+  .tr { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding: 12px 0; border-top: 1px solid var(--linha); }
+  .tr:first-child { border-top: 0; padding-top: 0; }
+  .tr .a { font-weight: 700; }
+  .tr .b { font-weight: 700; text-align: right; }
+  .tr .c { font-size: 13px; color: var(--suave); }
+  .tr .d { font-size: 13px; color: var(--suave); text-align: right; }
+  .etq { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--linha); color: var(--suave); margin-left: 6px; }
+  .x { border: 0; background: none; color: var(--suave); font-size: 13px; text-decoration: underline; padding: 6px 0 0; }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 12px 18px; border-radius: 12px; border: 1px solid var(--linha); background: var(--card2); font-weight: 700; text-decoration: none; }
+  .btn.p { background: var(--brasa); color: var(--brasa-tinta); border-color: var(--brasa); }
+  .btns { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btns .btn { flex: 1 1 200px; }
+  form { display: grid; gap: 12px; }
+  label { display: grid; gap: 6px; font-size: 14px; font-weight: 500; color: var(--suave); }
+  input, select { width: 100%; min-height: 48px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--linha); background: var(--fundo); color: var(--texto); font-size: 16px; }
+  input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid var(--brasa); outline-offset: 2px; }
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .cx { display: grid; grid-template-columns: 1fr 130px; gap: 12px; align-items: center; padding: 8px 0; border-top: 1px solid var(--linha); }
+  .cx:first-of-type { border-top: 0; }
+  .cx span { font-weight: 500; }
+  .cx small { display: block; color: var(--suave); font-size: 13px; font-weight: 400; }
+  .cx input { text-align: right; }
+  .ok { color: var(--lucro); font-weight: 700; font-size: 15px; }
+  .rodape { max-width: 1040px; margin: 8px auto 0; padding: 0 16px; font-size: 13px; color: var(--suave); display: flex; gap: 8px 16px; flex-wrap: wrap; align-items: center; }
+  .rodape button { border: 0; background: none; text-decoration: underline; color: var(--suave); padding: 8px 0; }
+  .entrar { max-width: 420px; margin: 0 auto; width: 100%; }
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo-in">
+    <div class="marca-linha">
+      <a class="marca" href="#resumo"><b>Dupas</b><span>Lucro real</span></a>
+      <div class="papel"><span id="papel-rot">Vendo como</span>
+        <div class="seg" id="papel" role="group" aria-labelledby="papel-rot">
+          <button type="button" data-papel="dono">Dono</button>
+          <button type="button" data-papel="caixa">Caixa</button>
+        </div>
+      </div>
+    </div>
+    <nav id="nav" aria-label="Telas"></nav>
+  </div>
+</header>
+
+<main id="tela"></main>
+
+<div class="rodape">
+  <span>Hoje: terça, 24 de novembro</span>
+  <a href="#entrar">Como cada pessoa entra</a>
+  <button type="button" id="recomecar">Recomeçar exemplo</button>
+  <span>Sistema por <a href="https://lgnk.com.br" target="_blank" rel="noopener">LGNK Sistemas</a></span>
+</div>
+
+<script>
+(() => {
+  const HOJE = 24, CHAVE = "dupas-previa-v1";
+  const SEMANA = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
+  const CANAIS = [
+    { id: "ifood", nome: "iFood", taxa: 23, parte: .40 },
+    { id: "credito", nome: "Cartão de crédito", taxa: 3.5, parte: .25 },
+    { id: "debito", nome: "Cartão de débito", taxa: 1.5, parte: .10 },
+    { id: "pix", nome: "Pix", taxa: 0, parte: .20 },
+    { id: "dinheiro", nome: "Dinheiro", taxa: 0, parte: .05 }
+  ];
+  const TIPOS = {
+    m: ["Carnes", "Pães", "Hortifruti e queijos", "Bebidas", "Outra mercadoria"],
+    o: ["Funcionários", "Aluguel", "Energia", "Gás", "Embalagens", "Motoboys", "Internet", "Contador", "Outro gasto"]
+  };
+  const dow = d => (d - 1) % 7; // 1º de novembro de 2026 é domingo
+  const BASE = [3000, 0, 1800, 2000, 2400, 3400, 3800];
+
+  function exemplo() {
+    const vendas = {};
+    for (let d = 1; d <= HOJE; d++) {
+      const f = 1 + (((d * 7) % 5) - 2) * 0.05, dia = {};
+      CANAIS.forEach(c => { dia[c.id] = Math.round(BASE[dow(d)] * f * c.parte / 10) * 10; });
+      vendas[d] = dia;
+    }
+    const g = [];
+    [3, 10, 17, 24].forEach(d => g.push({ d, cat: "m", desc: "Carnes", v: 2200 }, { d, cat: "m", desc: "Pães", v: 500 }));
+    [5, 12, 19].forEach(d => g.push({ d, cat: "m", desc: "Hortifruti e queijos", v: 700 }, { d, cat: "m", desc: "Bebidas", v: 900 }));
+    [7, 14, 21].forEach(d => g.push({ d, cat: "o", desc: "Motoboys", v: 600 }));
+    g.push({ d: 5, cat: "o", desc: "Aluguel", v: 2500 }, { d: 5, cat: "o", desc: "Funcionários", v: 6500 },
+      { d: 10, cat: "o", desc: "Energia", v: 900 }, { d: 10, cat: "o", desc: "Internet", v: 120 },
+      { d: 12, cat: "o", desc: "Gás", v: 450 }, { d: 15, cat: "o", desc: "Contador", v: 450 },
+      { d: 3, cat: "o", desc: "Embalagens", v: 600 }, { d: 17, cat: "o", desc: "Embalagens", v: 600 });
+    g.forEach((x, i) => { x.id = i + 1; });
+    return { papel: "dono", periodo: "mes", taxas: Object.fromEntries(CANAIS.map(c => [c.id, c.taxa])), vendas, gastos: g, prox: g.length + 1 };
+  }
+
+  let S;
+  try { S = JSON.parse(localStorage.getItem(CHAVE)); } catch (e) {}
+  if (!S || !S.vendas || !S.gastos) S = exemplo();
+  const salvar = () => { try { localStorage.setItem(CHAVE, JSON.stringify(S)); } catch (e) {} };
+
+  const R = v => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  const P = v => v.toLocaleString("pt-BR", { maximumFractionDigits: 1 }) + "%";
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const lerValor = s => { const n = parseFloat(String(s).replace(/\./g, "").replace(",", ".")); return isFinite(n) && n > 0 ? n : 0; };
+  const PERIODOS = { hoje: ["Hoje", [HOJE, HOJE]], semana: ["7 dias", [HOJE - 6, HOJE]], mes: ["Novembro", [1, HOJE]] };
+
+  function conta(de, ate) {
+    const canais = CANAIS.map(c => ({ ...c, taxa: S.taxas[c.id], bruto: 0 }));
+    let merc = 0, oper = 0;
+    for (let d = de; d <= ate; d++) canais.forEach(c => { c.bruto += (S.vendas[d] || {})[c.id] || 0; });
+    canais.forEach(c => { c.fee = c.bruto * c.taxa / 100; c.liq = c.bruto - c.fee; });
+    S.gastos.forEach(x => { if (x.d >= de && x.d <= ate) x.cat === "m" ? merc += x.v : oper += x.v; });
+    const vendas = canais.reduce((a, c) => a + c.bruto, 0), taxas = canais.reduce((a, c) => a + c.fee, 0);
+    return { canais, vendas, taxas, merc, oper, lucro: vendas - taxas - merc - oper };
+  }
+
+  const chips = () => `<div class="seg" id="periodo" role="group" aria-label="Período">` +
+    Object.entries(PERIODOS).map(([k, v]) => `<button type="button" data-per="${k}" aria-pressed="${S.periodo === k}">${v[0]}</button>`).join("") + `</div>`;
+  const linha = (cls, nome, v, base, sinal) => {
+    const pct = base ? Math.abs(v) / base * 100 : 0;
+    return `<div class="lin ${cls}"><span class="nome">${nome}</span><span class="v num">${sinal}${R(Math.abs(v))}</span>
+      <span class="pct"><span class="barra"><i style="width:${Math.min(100, pct)}%"></i></span><span class="num">${P(pct)}</span></span></div>`;
+  };
+
+  const TELAS = {
+    resumo() {
+      const [de, ate] = PERIODOS[S.periodo][1], c = conta(de, ate);
+      const de100 = c.vendas ? c.lucro / c.vendas * 100 : 0;
+      let dias = "";
+      if (S.periodo !== "hoje") {
+        const ls = []; for (let d = de; d <= ate; d++) ls.push([d, conta(d, d)]);
+        const max = Math.max(1, ...ls.map(x => Math.abs(x[1].lucro)));
+        dias = `<section class="card"><h2>Lucro dia a dia</h2><div class="dias">` + ls.map(([d, x]) => {
+          const fech = !x.vendas && !x.merc && !x.oper;
+          return `<div class="d ${fech ? "f" : x.lucro < 0 ? "n" : ""}" title="${d}/11 · ${R(x.lucro)}"><i style="height:${fech ? 2 : Math.max(3, Math.abs(x.lucro) / max * 100)}%"></i><span>${ls.length > 10 ? d : SEMANA[dow(d)]}</span></div>`;
+        }).join("") + `</div><div class="leg"><span><b style="background:var(--lucro)"></b>Dia com lucro</span><span><b style="background:var(--sai)"></b>Dia em que saiu mais do que entrou</span></div>
+        <p class="dica">Dia vermelho não é dia ruim de venda: é dia de conta grande, como <b>aluguel e funcionários no dia 5</b>.</p></section>`;
+      }
+      const ifood = c.canais[0];
+      return `<div class="cab"><div><h1>Quanto sobrou</h1><p class="sub">Vendas menos taxas, mercadoria e gastos do dia a dia.</p></div>${chips()}</div>
+      <div class="grade"><div class="grade" style="grid-template-columns:1fr">
+        <section class="card heroi ${c.lucro < 0 ? "neg" : ""}"><span class="rot">${c.lucro < 0 ? "Faltou" : "Sobrou pra você"} · ${PERIODOS[S.periodo][0]}</span>
+          <span class="valor num">${R(c.lucro)}</span>
+          <span class="de100">${c.vendas ? `De cada R$ 100 vendidos, ${c.lucro < 0 ? "faltaram" : "sobraram"} <b>${R(Math.abs(de100))}</b>.` : "Sem vendas lançadas neste período."}</span></section>
+        <section class="card"><h2>A conta</h2><div class="conta">
+          ${linha("venda", "Vendas", c.vendas, c.vendas, "")}
+          ${linha("", "Taxas (iFood e maquininha)", c.taxas, c.vendas, "− ")}
+          ${linha("", "Mercadoria", c.merc, c.vendas, "− ")}
+          ${linha("", "Gastos do dia a dia", c.oper, c.vendas, "− ")}
+          ${linha("total", "Lucro", c.lucro, c.vendas, c.lucro < 0 ? "− " : "")}
+        </div></section></div>
+        <div class="grade" style="grid-template-columns:1fr">${dias}
+        <section class="card"><h2>Onde a taxa pesa</h2>
+          <p class="dica">O iFood ficou com <b>${R(ifood.fee)}</b> em taxas: ${P(ifood.taxa)} de tudo que você vendeu por lá. No Pix, a mesma venda entra inteira.</p>
+          <div class="btns"><a class="btn" href="#vendas">Ver vendas por canal</a><a class="btn" href="#taxas">Ajustar taxas</a></div></section></div>
+      </div>`;
+    },
+    vendas() {
+      const [de, ate] = PERIODOS[S.periodo][1], c = conta(de, ate);
+      return `<div class="cab"><div><h1>Vendas</h1><p class="sub">Quanto entrou em cada canal e quanto ficou depois da taxa.</p></div>${chips()}</div>
+      <div class="grade"><section class="card"><h2>Por canal</h2><div class="tab">` + c.canais.map(k =>
+        `<div class="tr"><span class="a">${k.nome}</span><span class="b num">${R(k.liq)}</span>
+         <span class="c num">Vendeu ${R(k.bruto)}</span><span class="d num">${k.fee ? "taxa de " + P(k.taxa) + ": − " + R(k.fee) : "sem taxa"}</span></div>`).join("") +
+        `<div class="tr"><span class="a">Total que entrou limpo</span><span class="b num pos">${R(c.vendas - c.taxas)}</span>
+         <span class="c num">Vendeu ${R(c.vendas)}</span><span class="d num">taxas: − ${R(c.taxas)}</span></div></div></section>
+      <section class="card"><h2>De onde vêm as vendas</h2>
+        <p>As vendas entram de dois jeitos. Você escolhe o que funcionar melhor na sua rotina.</p>
+        <div class="btns"><button class="btn p" type="button" data-demo="No sistema final, as vendas entram sozinhas a partir do relatório do app de pedidos que você já usa.">Puxar do app de pedidos</button>
+        <a class="btn" href="#fechar">Fechar o dia na mão</a></div>
+        <p class="sub">Fechar o dia leva 1 minuto: é só o total de cada canal.</p></section></div>`;
+    },
+    gastos() {
+      const dono = S.papel === "dono", [de, ate] = dono ? PERIODOS[S.periodo][1] : [HOJE, HOJE], c = conta(de, ate);
+      const lista = S.gastos.filter(x => x.d >= de && x.d <= ate).sort((a, b) => b.d - a.d || b.id - a.id);
+      const form = `<section class="card"><h2>Lançar gasto</h2><form id="f-gasto">
+        <div class="seg" id="cat" role="group" aria-label="Tipo de gasto"><button type="button" data-cat="m" aria-pressed="true">Mercadoria</button><button type="button" data-cat="o" aria-pressed="false">Gasto do dia a dia</button></div>
+        <label>O que foi<select id="g-desc">${TIPOS.m.map(t => `<option>${t}</option>`).join("")}</select></label>
+        <div class="duo"><label>Valor (R$)<input id="g-valor" inputmode="decimal" placeholder="0,00" required></label>
+        <label>Dia de novembro<input id="g-dia" type="number" min="1" max="${HOJE}" value="${HOJE}" required></label></div>
+        <button class="btn p" type="submit">Salvar gasto</button><p class="ok" id="g-ok" role="status" hidden></p></form></section>`;
+      const itens = lista.length ? lista.map(x => `<div class="tr"><span class="a">${esc(x.desc)}<span class="etq">${x.cat === "m" ? "Mercadoria" : "Dia a dia"}</span></span><span class="b num negv">− ${R(x.v)}</span>
+        <span class="c">${x.d}/11 · ${SEMANA[dow(x.d)]}</span><span class="d"><button class="x" type="button" data-apagar="${x.id}">Apagar</button></span></div>`).join("")
+        : `<p class="sub">Nenhum gasto lançado ${dono ? "neste período" : "hoje"}.</p>`;
+      return `<div class="cab"><div><h1>${dono ? "Gastos" : "Lançar gasto"}</h1><p class="sub">${dono ? "Tudo que saiu: mercadoria e gastos do dia a dia." : "Comprou ou pagou alguma coisa? Lança aqui na hora."}</p></div>${dono ? chips() : ""}</div>
+      <div class="grade">${form}<section class="card"><h2>${dono ? "O que saiu · " + PERIODOS[S.periodo][0] : "Lançados hoje"}</h2>
+        ${dono ? `<div class="duo"><div class="dica">Mercadoria<br><b class="num">${R(c.merc)}</b></div><div class="dica">Dia a dia<br><b class="num">${R(c.oper)}</b></div></div>` : ""}
+        <div class="tab">${itens}</div></section></div>`;
+    },
+    taxas() {
+      return `<div class="cab"><div><h1>Taxas</h1><p class="sub">Você ajusta uma vez. Daí em diante o desconto é automático em toda venda.</p></div></div>
+      <div class="grade"><section class="card"><h2>Quanto cada canal cobra</h2><div id="f-taxas">` + CANAIS.map(k =>
+        `<div class="cx"><span>${k.nome}<small>% descontado de cada venda</small></span><input class="num" data-taxa="${k.id}" inputmode="decimal" value="${String(S.taxas[k.id]).replace(".", ",")}" aria-label="Taxa de ${k.nome} em %"></div>`).join("") +
+        `</div></section><section class="card" id="taxa-efeito"></section></div>`;
+    },
+    fechar() {
+      const dia = S.vendas[HOJE] || {};
+      return `<div class="cab"><div><h1>Fechar o dia</h1><p class="sub">Terça, 24 de novembro. Digite o total vendido em cada canal.</p></div></div>
+      <div class="grade"><section class="card"><form id="f-fechar">` + CANAIS.map(k =>
+        `<div class="cx"><span>${k.nome}</span><input class="num" data-canal="${k.id}" inputmode="decimal" value="${(dia[k.id] || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}" aria-label="Total em ${k.nome}"></div>`).join("") +
+        `<button class="btn p" type="submit">Salvar fechamento</button><p class="ok" id="f-ok" role="status" hidden></p></form></section>
+      <section class="card"><h2>Como fica no sistema final</h2><p>${S.papel === "dono" ? "Quem fecha o dia pode ser você ou quem fica no caixa." : "Você lança os totais. Quanto sobrou no fim, só o dono enxerga."}</p>
+      <button class="btn" type="button" data-demo="No sistema final, o dono recebe um aviso no WhatsApp com o lucro do dia assim que o caixa fecha.">Avisar o dono do fechamento</button></section></div>`;
+    },
+    entrar() {
+      return `<section class="card entrar"><h1>Entrar</h1><p class="sub">No sistema final, cada pessoa entra com o celular e uma senha própria. O caixa lança, o dono enxerga o lucro.</p>
+      <form id="f-entrar"><label>Celular<input value="(00) 00000-0000" readonly></label><label>Senha<input value="••••••••" readonly></label></form>
+      <div class="btns"><button class="btn p" type="button" data-entrar="dono">Entrar como dono</button><button class="btn" type="button" data-entrar="caixa">Entrar como caixa</button></div></section>`;
+    }
+  };
+
+  const MENU = { dono: [["resumo", "Resumo"], ["vendas", "Vendas"], ["gastos", "Gastos"], ["taxas", "Taxas"]], caixa: [["fechar", "Fechar o dia"], ["gastos", "Lançar gasto"]] };
+  const LIVRE = { dono: ["resumo", "vendas", "gastos", "taxas", "fechar", "entrar"], caixa: ["fechar", "gastos", "entrar"] };
+  const tela = document.getElementById("tela");
+  let rota = "";
+
+  function efeitoTaxa() {
+    const el = document.getElementById("taxa-efeito"); if (!el) return;
+    const c = conta(1, HOJE);
+    el.innerHTML = `<h2>Efeito em novembro</h2><div class="tab"><div class="tr"><span class="a">Taxas no mês</span><span class="b num negv">− ${R(c.taxas)}</span><span class="c num">${P(c.vendas ? c.taxas / c.vendas * 100 : 0)} das vendas</span><span class="d"></span></div>
+      <div class="tr"><span class="a">Lucro do mês</span><span class="b num ${c.lucro < 0 ? "negv" : "pos"}">${R(c.lucro)}</span><span class="c">Muda na hora quando você mexe numa taxa</span><span class="d"></span></div></div>
+      <button class="btn" type="button" data-demo="No sistema final, dá para ter taxa diferente por bandeira, por parcelamento e por plano do iFood.">Taxa por bandeira e parcelamento</button>`;
+  }
+
+  function desenhar() {
+    let r = location.hash.slice(1) || MENU[S.papel][0][0];
+    if (!TELAS[r] || !LIVRE[S.papel].includes(r)) r = MENU[S.papel][0][0];
+    const mudou = r !== rota; rota = r;
+    document.getElementById("nav").innerHTML = MENU[S.papel].map(([h, t]) => `<a href="#${h}" ${h === r ? 'aria-current="page"' : ""}>${t}</a>`).join("");
+    document.querySelectorAll("#papel button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.papel === S.papel)));
+    tela.innerHTML = TELAS[r]();
+    efeitoTaxa();
+    if (mudou) window.scrollTo(0, 0);
+  }
+  const ir = h => { if (location.hash === "#" + h) desenhar(); else location.hash = h; };
+
+  document.addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    if (b.dataset.papel) { S.papel = b.dataset.papel; salvar(); ir(MENU[S.papel][0][0]); }
+    else if (b.dataset.entrar) { S.papel = b.dataset.entrar; salvar(); ir(MENU[S.papel][0][0]); }
+    else if (b.dataset.per) { S.periodo = b.dataset.per; salvar(); desenhar(); }
+    else if (b.dataset.cat) {
+      document.querySelectorAll("#cat button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+      document.getElementById("g-desc").innerHTML = TIPOS[b.dataset.cat].map(t => `<option>${t}</option>`).join("");
+    }
+    else if (b.dataset.apagar) { S.gastos = S.gastos.filter(x => x.id !== +b.dataset.apagar); salvar(); desenhar(); }
+    else if (b.id === "recomecar") { S = exemplo(); salvar(); ir("resumo"); }
+  });
+
+  document.addEventListener("submit", e => {
+    e.preventDefault();
+    if (e.target.id === "f-gasto") {
+      const v = lerValor(document.getElementById("g-valor").value);
+      const d = Math.min(HOJE, Math.max(1, parseInt(document.getElementById("g-dia").value, 10) || HOJE));
+      if (!v) { document.getElementById("g-valor").focus(); return; }
+      const cat = document.querySelector("#cat button[aria-pressed='true']").dataset.cat, desc = document.getElementById("g-desc").value;
+      S.gastos.push({ id: S.prox++, d, cat, desc, v }); salvar(); desenhar();
+      const ok = document.getElementById("g-ok");
+      ok.textContent = `Salvo: ${desc}, ${R(v)}, dia ${d}/11.${S.papel === "dono" ? " O lucro já foi atualizado." : ""}`; ok.hidden = false;
+    }
+    if (e.target.id === "f-fechar") {
+      const dia = {}; e.target.querySelectorAll("[data-canal]").forEach(i => { dia[i.dataset.canal] = lerValor(i.value); });
+      S.vendas[HOJE] = dia; salvar();
+      const c = conta(HOJE, HOJE), ok = document.getElementById("f-ok");
+      ok.textContent = S.papel === "dono" ? `Dia fechado: vendeu ${R(c.vendas)}, sobrou ${R(c.lucro)} hoje.` : `Dia fechado: ${R(c.vendas)} em vendas. Obrigado!`;
+      ok.hidden = false;
+    }
+  });
+
+  document.addEventListener("input", e => {
+    const i = e.target.closest("[data-taxa]"); if (!i) return;
+    const n = parseFloat(i.value.replace(",", "."));
+    S.taxas[i.dataset.taxa] = isFinite(n) ? Math.min(100, Math.max(0, n)) : 0; salvar(); efeitoTaxa();
+  });
+
+  window.addEventListener("hashchange", desenhar);
+  desenhar();
+})();
+</script>
+
+<!--
+  PAINEL DE OPINIÃO DA PRÉVIA — cole este bloco inteiro logo antes de </body> da prévia.
+
+  O que ele faz:
+  - Faixa no topo "// prévia feita pela LGNK Sistemas · fotos, nomes e textos são provisórios"
+    (em prévia de sistema: "telas de exemplo, com dados fictícios").
+  - Botão fixo "Dar minha opinião": o cliente troca a paleta de cores ao vivo, marca o que achou,
+    escreve um comentário e envia tudo pelo WhatsApp da LGNK Sistemas (link wa.me já preenchido).
+  - Toast de demonstração: qualquer botão com data-demo="whatsapp" (ou data-demo-msg="texto")
+    mostra o que o botão vai fazer no site final, em vez de abrir o WhatsApp do cliente.
+    Em prévia de sistema, data-demo="No sistema final, isto salva a venda e avisa o financeiro." mostra
+    esse texto (qualquer valor diferente de "whatsapp" é o próprio aviso).
+
+  O painel tem a cara da LGNK (creme, tinta, roxo, borda e sombra dura, sem cantos arredondados) e não
+  depende das cores da página: a prévia segue a identidade do cliente, o painel é a LGNK falando.
+
+  Como configurar: edite PREVIA_CONFIG no <script> abaixo (tipo "site" ou "sistema", paletas e chips; o
+  contato é fixo).
+  Paletas: a página define as cores dela em :root e as alternativas em :root[data-palette="<id>"] { ... }.
+  O painel só troca o atributo data-palette do <html>.
+-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700;800&family=JetBrains+Mono:wght@700&display=swap">
+<style>
+  [hidden] { display: none !important; }
+  .pv-ribbon, .pv-fab, .pv-sheet, .pv-toast {
+    --pv-cream: #FFF8EC; --pv-ink: #1B1A24; --pv-muted: #5E5A6B; --pv-purple: #7B4DFF; --pv-purple-ink: #5A30D9;
+    --pv-yellow: #FFD23F; --pv-white: #FFFFFF;
+    --pv-sans: "Inter Tight", system-ui, sans-serif; --pv-mono: "JetBrains Mono", ui-monospace, monospace;
+    box-sizing: border-box; border-radius: 0;
+  }
+  .pv-ribbon *, .pv-sheet *, .pv-toast * { box-sizing: border-box; border-radius: 0; }
+  /* Blinda o painel contra estilos da prévia (p, label, button { letter-spacing… } do site do cliente). */
+  .pv-ribbon, .pv-fab, .pv-sheet, .pv-toast, .pv-sheet h2, .pv-sheet p, .pv-sheet label, .pv-sheet span,
+  .pv-sheet button, .pv-sheet a, .pv-sheet b { letter-spacing: normal; text-transform: none; }
+  .pv-ribbon {
+    background: var(--pv-ink); color: var(--pv-cream); font: 400 12.5px/1.4 var(--pv-sans); text-align: center;
+    padding-block: 7px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .pv-ribbon b { font: 700 12px/1.4 var(--pv-mono); color: var(--pv-yellow); }
+  .pv-fab {
+    position: fixed; z-index: 70; right: calc(18px + env(safe-area-inset-right, 0px)); bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+    display: inline-flex; align-items: center; gap: 10px; padding: 12px 18px; cursor: pointer;
+    background: var(--pv-purple); color: var(--pv-white); font: 700 15px/1.1 var(--pv-sans);
+    border: 2px solid var(--pv-ink); box-shadow: 4px 4px 0 var(--pv-ink);
+    transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .pv-fab:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--pv-ink); }
+    .pv-fab:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--pv-ink); transition-duration: 70ms; }
+  }
+  .pv-sheet {
+    position: fixed; z-index: 75; right: calc(18px + env(safe-area-inset-right, 0px)); bottom: calc(82px + env(safe-area-inset-bottom, 0px));
+    width: min(380px, calc(100vw - 36px)); max-height: calc(100% - 140px); overflow: auto;
+    background: var(--pv-cream); color: var(--pv-ink); border: 2px solid var(--pv-ink); box-shadow: 6px 6px 0 var(--pv-ink);
+    padding: 22px; display: flex; flex-direction: column; gap: 18px; font: 400 15px/1.5 var(--pv-sans);
+  }
+  .pv-sheet h2 { margin: 0; font: 800 20px/1.15 var(--pv-sans); letter-spacing: -0.02em; color: var(--pv-ink); }
+  .pv-sheet p { margin: 0; color: var(--pv-muted); font: 400 14.5px/1.5 var(--pv-sans); }
+  .pv-lbl { display: block; font: 700 12.5px/1.3 var(--pv-mono); color: var(--pv-purple-ink); margin-bottom: 8px; }
+  .pv-seg { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
+  .pv-seg button, .pv-chips button {
+    font: 600 14px/1.2 var(--pv-sans); color: var(--pv-ink); background: var(--pv-white); cursor: pointer; border: 2px solid var(--pv-ink);
+  }
+  .pv-seg button { display: flex; align-items: center; gap: 10px; padding: 9px 11px; min-height: 44px; }
+  .pv-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pv-chips button { padding: 8px 12px; min-height: 40px; font-size: 13.5px; }
+  .pv-seg button[aria-pressed="true"], .pv-chips button[aria-pressed="true"] { background: var(--pv-yellow); box-shadow: 3px 3px 0 var(--pv-ink); }
+  .pv-swatch { width: 22px; height: 22px; flex-shrink: 0; border: 2px solid var(--pv-ink); }
+  .pv-sheet textarea {
+    width: 100%; min-height: 84px; resize: vertical; border: 2px solid var(--pv-ink); background: var(--pv-white); color: var(--pv-ink);
+    padding: 10px 12px; font: 400 16px/1.45 var(--pv-sans); /* 16 px: abaixo disso o iPhone dá zoom ao digitar */
+  }
+  .pv-send {
+    display: flex; align-items: center; justify-content: center; text-decoration: none; padding: 13px 18px;
+    background: var(--pv-purple); color: var(--pv-white); font: 700 15px/1.1 var(--pv-sans);
+    border: 2px solid var(--pv-ink); box-shadow: 4px 4px 0 var(--pv-ink);
+  }
+  .pv-note { text-align: center; font-size: 13px !important; }
+  .pv-note b { color: var(--pv-ink); user-select: all; }
+  .pv-fab:focus-visible, .pv-sheet :focus-visible { outline: 3px solid var(--pv-purple-ink); outline-offset: 3px; }
+  .pv-toast {
+    position: fixed; z-index: 90; left: 50%; transform: translateX(-50%); bottom: calc(86px + env(safe-area-inset-bottom, 0px));
+    width: min(460px, calc(100vw - 32px)); background: var(--pv-ink); color: var(--pv-cream);
+    border: 2px solid var(--pv-ink); box-shadow: 4px 4px 0 var(--pv-purple); padding: 14px 18px; font: 400 14.5px/1.45 var(--pv-sans);
+  }
+</style>
+
+<button class="pv-fab" type="button" id="pv-fab" aria-expanded="false" aria-controls="pv-sheet">Dar minha opinião</button>
+<div class="pv-sheet" id="pv-sheet" role="dialog" aria-labelledby="pv-title" hidden>
+  <div><h2 id="pv-title">Esta é uma prévia</h2><p style="margin-top:8px" id="pv-intro">Navegue à vontade e conta pra gente o que achou.</p></div>
+  <div id="pv-pal-wrap"><span class="pv-lbl" id="pv-pal-lbl">// cores</span><div class="pv-seg" id="pv-pal"></div></div>
+  <div><span class="pv-lbl">// o que achou?</span><div class="pv-chips" id="pv-chips"></div></div>
+  <div><label class="pv-lbl" for="pv-comment">// comentários</label><textarea id="pv-comment" placeholder="Ex.: gostei das cores, mas queria mais fotos minhas na entrada."></textarea></div>
+  <a class="pv-send" id="pv-send" href="#" target="_blank" rel="noopener">Enviar no WhatsApp →</a>
+  <p class="pv-note" id="pv-note"></p>
+</div>
+<div class="pv-toast" id="pv-toast" role="status" hidden></div>
+
+<script>
+(() => {
+  const PREVIA_CONFIG = {
+    // Contato fixo da LGNK Sistemas (o mesmo de marca/empresa.json da skill). Não troque por prévia.
+    empresaNome: "LGNK Sistemas",
+    empresaWhatsapp: "(31) 98256-1619",
+    empresaWaLink: "5531982561619",
+    // "site" (padrão) ou "sistema": muda os textos do painel, da faixa e dos avisos dos botões de demonstração.
+    tipo: "sistema",
+    saudacao: "",  // vazio = "Olá! Vi a prévia do site." / "Olá! Vi a prévia do sistema."
+    // id = valor de data-palette (o primeiro é o padrão da página, sem atributo); swatch = CSS do quadradinho
+    // (duas cores com corte seco, sem degradê suave)
+    paletas: [
+      { id: "", label: "Escuro", swatch: "linear-gradient(135deg, #f26a1b 50%, #14100e 50%)" },
+      { id: "claro", label: "Claro", swatch: "linear-gradient(135deg, #d9530a 50%, #f7f1ea 50%)" }
+    ],
+    chips: ["Fácil de usar", "É isso que eu preciso", "Falta uma tela", "Quero mudar a conta", "Gostei do visual"]
+  };
+
+  const $ = id => document.getElementById(id);
+  const ribbon = document.createElement("div");
+  ribbon.className = "pv-ribbon";
+  const tipo = PREVIA_CONFIG.tipo === "sistema" ? "sistema" : "site";
+  PREVIA_CONFIG.saudacao ||= `Olá! Vi a prévia do ${tipo}.`;
+  $("pv-intro").textContent = `Navegue à vontade e conta pra gente o que achou. Dá para testar as cores do ${tipo} aqui mesmo.`;
+  $("pv-pal-lbl").textContent = `// cores do ${tipo}`;
+  ribbon.innerHTML = `<b>// prévia feita pela ${PREVIA_CONFIG.empresaNome}</b> · ` +
+    (tipo === "sistema" ? "telas de exemplo, com dados fictícios" : "fotos, nomes e textos são provisórios");
+  document.body.prepend(ribbon);
+
+  let paleta = PREVIA_CONFIG.paletas[0]?.id || "";
+  const pal = $("pv-pal");
+  if (PREVIA_CONFIG.paletas.length < 2) $("pv-pal-wrap").hidden = true;
+  pal.innerHTML = PREVIA_CONFIG.paletas.map((p, i) =>
+    `<button type="button" data-p="${p.id}" aria-pressed="${i === 0}"><span class="pv-swatch" style="background:${p.swatch}"></span>${p.label}</button>`).join("");
+  $("pv-chips").innerHTML = PREVIA_CONFIG.chips.map(c => `<button type="button" aria-pressed="false">${c}</button>`).join("");
+  $("pv-note").innerHTML = `Abre uma conversa com a ${PREVIA_CONFIG.empresaNome}<br><b>${PREVIA_CONFIG.empresaWhatsapp}</b>`;
+
+  function atualizar() {
+    const marcados = [...document.querySelectorAll("#pv-chips button[aria-pressed='true']")].map(b => b.textContent);
+    const label = PREVIA_CONFIG.paletas.find(p => p.id === paleta)?.label || "";
+    // A linha da prévia diz de qual site veio a opinião (várias prévias chegam no mesmo WhatsApp).
+    const linhas = [PREVIA_CONFIG.saudacao, `Prévia: ${location.origin}${location.pathname}`];
+    if (PREVIA_CONFIG.paletas.length > 1) linhas.push(`Cores que prefiro: ${label}.`);
+    if (marcados.length) linhas.push(`O que achei: ${marcados.join(", ")}.`);
+    const c = $("pv-comment").value.trim();
+    if (c) linhas.push(`Comentários: ${c}`);
+    $("pv-send").href = `https://wa.me/${PREVIA_CONFIG.empresaWaLink}?text=` + encodeURIComponent(linhas.join("\n"));
+  }
+  const abrir = v => { $("pv-sheet").hidden = !v; $("pv-fab").setAttribute("aria-expanded", String(v)); };
+  $("pv-fab").addEventListener("click", () => abrir($("pv-sheet").hidden));
+  pal.addEventListener("click", e => {
+    const b = e.target.closest("[data-p]"); if (!b) return;
+    paleta = b.dataset.p;
+    if (paleta) document.documentElement.setAttribute("data-palette", paleta);
+    else document.documentElement.removeAttribute("data-palette");
+    pal.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    atualizar();
+  });
+  $("pv-chips").addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    b.setAttribute("aria-pressed", String(b.getAttribute("aria-pressed") !== "true")); atualizar();
+  });
+  $("pv-comment").addEventListener("input", atualizar);
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("pv-sheet").hidden) { abrir(false); $("pv-fab").focus(); } });
+
+  let t;
+  document.addEventListener("click", e => {
+    const b = e.target.closest("[data-demo],[data-demo-msg]"); if (!b) return;
+    e.preventDefault();
+    const el = $("pv-toast");
+    // data-demo="texto" explica a ação de um botão de sistema ("No sistema final, isto salva a venda...").
+    // data-demo-msg="..." é o botão de WhatsApp do cliente.
+    const texto = b.dataset.demo && b.dataset.demo !== "whatsapp" ? b.dataset.demo : "";
+    if (texto) el.textContent = texto;
+    else el.textContent = `No ${tipo} final, este botão abre o WhatsApp do cliente com a mensagem: “${b.dataset.demoMsg || `Olá! Vi o ${tipo} e queria saber mais.`}”`;
+    el.hidden = false; clearTimeout(t); t = setTimeout(() => { el.hidden = true; }, 5200);
+  });
+  atualizar();
+})();
+</script>
+
+</body>
+</html>
